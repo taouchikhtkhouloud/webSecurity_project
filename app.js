@@ -72,65 +72,70 @@ app.get("/login", (req,res) =>{
 
 
 //Backend login vulnerable to SQL injection Blind
-app.post('/home', function(request, response) {
-    let errors = [];
-    var email = request.body.email;
-    var password = request.body.password;
-    if (email && password) {
-        try {
-            var sql = "SELECT * FROM users WHERE email = '" + email + "' AND password = '" + password + "'";
-            db.query(sql, function(error, results, fields) {
-                if (error) {
-                    console.log(error);
-                    errors.push({ message: "Something went wrong. Please try again later." });
-                    response.render("login", { errors });
-                } else {
-                    if (results.length > 0) {
-                        request.session.loggedin = true;
-                        request.session.email = email;
-                        response.render("home");
-                    } else {
-                        errors.push({ message: "Wrong Password / email,  try again!" });
-                        response.render("login", { errors });
-                    }
-                }
-                response.end();
-            });
-        } catch (err) {
-            console.log(err);
-            errors.push({ message: "Something went wrong. Please try again later." });
-            response.render("login", { errors });
-        }
-    } else {
-        response.send('Please enter Username and Password!');
-        response.end();
-    }
-});
+// app.post('/home', function(request, response) {
+//     let errors = [];
+//     var email = request.body.email;
+//     var password = request.body.password;
+//     if (email && password) {
+//         try {
+//             var sql = "SELECT * FROM users WHERE email = '" + email + "' AND password = '" + password + "'";
+//             db.query(sql, function(error, results, fields) {
+//                 if (error) {
+//                     console.log(error);
+//                     errors.push({ message: "Unallowed characters inserted in credentials. Please try again later." });
+//                     response.render("login", { errors });
+//                 } else {
+//                     if (results.length > 0) {
+//                         request.session.loggedin = true;
+//                         request.session.email = email;
+//                         response.render("home");
+//                     } else {
+//                         errors.push({ message: "Wrong Password / email,  try again!" });
+//                         response.render("login", { errors });
+//                     }
+//                 }
+//                 response.end();
+//             });
+//         } catch (err) {
+//             console.log(err);
+//             errors.push({ message: "Something went wrong. Please try again later." });
+//             response.render("login", { errors });
+//         }
+//     } else {
+//         response.send('Please enter Username and Password!');
+//         response.end();
+//     }
+// });
 
 
 //Backend login protected against SQL injection Blind
-// app.post('/home', function(request, response) {
-// 	let errors = [];
-// 	var email = request.body.email;
-// 	var password = request.body.password;
-// 	if (email && password) {
-// 		db.query('SELECT * FROM users WHERE email = ? AND password = ?', [email, password], function(error, results, fields) {
-// 			if (results.length > 0) {
-// 				request.session.loggedin = true;
-// 				request.session.email = email;
-// 				response.render("home");
-// 			} else {
-// 				errors.push({ message: "Wrong Password / email,  try again!" });
-// 				response.render("login", { errors});
-// 			}			
-// 			response.end(); 
-// 		});
-// 	} else {
-// 		response.send('Please enter Username and Password!');
-// 		response.end();
-// 	}
-// });
-
+app.post('/home', function(request, response) {
+	let errors = [];
+	var email = request.body.email;
+	var password = request.body.password;
+	if (email && password) {
+		db.query('SELECT * FROM users WHERE email = ? AND password = ?', [email, password], function(error, results, fields) {
+			if (error) {
+				console.log(error);
+				errors.push({ message: "Unallowed characters inserted in credentials. Please try again later." });
+				response.render("login", { errors });
+			} else {
+				if (results.length > 0) {
+					request.session.loggedin = true;
+					request.session.email = email;
+					response.render("home");
+				} else {
+					errors.push({ message: "Wrong Password / email,  try again!" });
+					response.render("login", { errors });
+				}
+			}
+			response.end(); 
+		});
+	} else {
+		response.send('Please enter Username and Password!');
+		response.end();
+	}
+});
 
 app.get('/logout', (req, res)=> {
 	req.logout();
