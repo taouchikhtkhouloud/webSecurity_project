@@ -70,6 +70,85 @@ app.get("/login", (req,res) =>{
     res.render("login");
 });
 
+
+//Backend login vulnerable to SQL injection Blind
+app.post('/home', function(request, response) {	
+	let errors = [];
+	var email = request.body.email;
+	var password = request.body.password;
+	if (email && password) {
+		var sql = "SELECT * FROM users WHERE email = '" + email + "' AND password = '" + password + "'";
+		db.query(sql, function(error, results, fields) {
+			if (results.length > 0) {
+				request.session.loggedin = true;
+				request.session.email = email;
+				response.render("home");
+			} else {
+				errors.push({ message: "Wrong Password / email,  try again!" });
+				response.render("login", { errors});
+			}			
+			response.end(); 
+		});
+	} else {
+		response.send('Please enter Username and Password!');
+		response.end();
+	}
+});
+
+
+//Backend login protected against SQL injection Blind
+// app.post('/home', function(request, response) {
+// 	let errors = [];
+// 	var email = request.body.email;
+// 	var password = request.body.password;
+// 	if (email && password) {
+// 		db.query('SELECT * FROM users WHERE email = ? AND password = ?', [email, password], function(error, results, fields) {
+// 			if (results.length > 0) {
+// 				request.session.loggedin = true;
+// 				request.session.email = email;
+// 				response.render("home");
+// 			} else {
+// 				errors.push({ message: "Wrong Password / email,  try again!" });
+// 				response.render("login", { errors});
+// 			}			
+// 			response.end(); 
+// 		});
+// 	} else {
+// 		response.send('Please enter Username and Password!');
+// 		response.end();
+// 	}
+// });
+
+
+app.get('/logout', (req, res)=> {
+	req.logout();
+	req.session = null;
+	res.redirect('/login');
+  });
+
+app.get('/home', isAuthenticated, function(request, response) {
+	if (request.session.loggedin) {
+		response.render("home");
+	} else {
+		response.render("login");
+	}
+	response.end();
+});
+
+app.use((req, res) => {
+	res.status(404).render('error');
+});
+
+//create an isauthenticated function to check if the user is logged in or not
+function isAuthenticated(req, res, next) {	
+	if (req.isAuthenticated())
+	return next();	
+	res.redirect('/login');
+}
+
+
+
+	
 app.get("/CIT", (req,res) =>{
 	res.render("./Forms/CIT");
 });
@@ -103,57 +182,3 @@ app.get("/gallery", (req,res) =>{
 app.get("/info-CAS", (req,res) =>{
 	res.render("./Forms/info-CAS");
 })
-
-
-app.post('/home', function(request, response) {
-	
-	let errors = [];
-
-	var email = request.body.email;
-	var password = request.body.password;
-	if (email && password) {
-		var sql = "SELECT * FROM users WHERE email = '" + email + "' AND password = '" + password + "'";
-		db.query(sql, function(error, results, fields) {
-			if (results.length > 0) {
-				request.session.loggedin = true;
-				request.session.email = email;
-				response.render("home");
-			} else {
-				errors.push({ message: "Wrong Password / email,  try again!" });
-				response.render("login", { errors});
-			}			
-			response.end(); 
-		});
-	} else {
-		response.send('Please enter Username and Password!');
-		response.end();
-	}
-});
-
-app.get('/logout', (req, res)=> {
-	req.logout();
-	req.session = null;
-	res.redirect('/login');
-  });
-
-app.get('/home', isAuthenticated, function(request, response) {
-	if (request.session.loggedin) {
-		response.render("home");
-	} else {
-		response.render("login");
-	}
-	response.end();
-});
-
-app.use((req, res) => {
-	res.status(404).render('error');
-});
-
-//create an isauthenticated function to check if the user is logged in or not
-function isAuthenticated(req, res, next) {	
-	if (req.isAuthenticated())
-		return next();	
-	res.redirect('/login');
-}
-
-
