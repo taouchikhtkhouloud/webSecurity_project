@@ -71,8 +71,8 @@ app.get("/login", (req,res) =>{
 });
 
 
-//Backend login vulnerable to SQL injection Blind
-app.post('/home', function(request, response) {
+/* //Backend login vulnerable to SQL injection Blind
+ app.post('/home', function(request, response) {
     let errors = [];
     var email = request.body.email;
     var password = request.body.password;
@@ -88,6 +88,7 @@ app.post('/home', function(request, response) {
                     if (results.length > 0) {
                         request.session.loggedin = true;
                         request.session.email = email;
+                        console.log(results);
                         response.render("home");
                     } else {
                         errors.push({ message: "Wrong Password / email,  try again!" });
@@ -105,31 +106,31 @@ app.post('/home', function(request, response) {
         response.send('Please enter Username and Password!');
         response.end();
     }
-});
-
+});  */
+ 
 
 //Backend login protected against SQL injection Blind
-// app.post('/home', function(request, response) {
-// 	let errors = [];
-// 	var email = request.body.email;
-// 	var password = request.body.password;
-// 	if (email && password) {
-// 		db.query('SELECT * FROM users WHERE email = ? AND password = ?', [email, password], function(error, results, fields) {
-// 			if (results.length > 0) {
-// 				request.session.loggedin = true;
-// 				request.session.email = email;
-// 				response.render("home");
-// 			} else {
-// 				errors.push({ message: "Wrong Password / email,  try again!" });
-// 				response.render("login", { errors});
-// 			}			
-// 			response.end(); 
-// 		});
-// 	} else {
-// 		response.send('Please enter Username and Password!');
-// 		response.end();
-// 	}
-// });
+  app.post('/home', function(request, response) {
+ 	let errors = [];
+ 	var email = request.body.email;
+ 	var password = request.body.password;
+ 	if (email && password) {
+ 		db.query('SELECT * FROM users WHERE email = ? AND password = ?', [email, password], function(error, results, fields) {
+ 			if (results.length > 0) {
+ 				request.session.loggedin = true;
+                request.session.email = email;
+ 				response.render("home");
+ 			} else {
+ 				errors.push({ message: "Wrong Password / email,  try again!" });
+ 				response.render("login", { errors});
+ 			}			
+ 			response.end(); 
+ 		});
+ 	} else {
+ 		response.send('Please enter Username and Password!');
+ 		response.end();
+	}
+});  
 
 
 app.get('/logout', (req, res)=> {
