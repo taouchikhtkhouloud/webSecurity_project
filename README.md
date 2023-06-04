@@ -34,7 +34,7 @@ To run this web application locally, follow these steps:
 1. Clone the repository to your local machine:
 
    ```shell
-   git clone https://github.com/OssamaLouati/webSecurity_project.git
+   git clone https://github.com/taouchikhtkhouloud/webSecurity_project.git
    ```
 
 2. Install the required dependencies:
