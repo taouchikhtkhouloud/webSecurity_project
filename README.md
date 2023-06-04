@@ -61,9 +61,9 @@ We would like to thank all contributors and supporters of this project for their
 
 
 
-<img width="206" alt="Screenshot 2023-04-23 172918" src="https://github.com/OssamaLouati/webSecurity_project/assets/92301300/804c845b-2983-48fd-b6ce-daa53683ac14">
+<img width="206" height="306" alt="Screenshot 2023-04-23 172918" src="https://github.com/OssamaLouati/webSecurity_project/assets/92301300/804c845b-2983-48fd-b6ce-daa53683ac14">
 
-<img width="206" alt="Screenshot 2023-04-23 172918" src="https://github.com/OssamaLouati/webSecurity_project/assets/92301300/eedf7425-c211-4fc4-adb9-33bee316faa0">
+<img width="206" height="306" alt="Screenshot 2023-04-23 172918" src="https://github.com/OssamaLouati/webSecurity_project/assets/92301300/eedf7425-c211-4fc4-adb9-33bee316faa0">
 
 
 
